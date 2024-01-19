@@ -73,6 +73,24 @@ mse_lr, r2_lr = train_and_evaluate_model(lr_model, X_train, y_train, X_test, y_t
 print(f'線性回歸模型測試集均方誤差（MSE）：{mse_lr:.4f}')
 print(f'線性回歸模型測試集 R^2 分數：{r2_lr:.4f}')
 
+# 獲取係數
+coefficients = lr_model.coef_
+
+# 特徵名稱
+feature_names = X_train.columns
+
+# 將係數與特徵名稱結合成 DataFrame
+coefficients_df = pd.DataFrame({'Feature': feature_names, 'Coefficient': coefficients})
+
+# 顯示係數 DataFrame
+print(coefficients_df)
+
+# 視覺化係數
+plt.figure(figsize=(12, 6))
+sns.barplot(x='Coefficient', y='Feature', data=coefficients_df)
+plt.title('Linear Regression Coefficients')
+plt.show()
+
 # 初始化隨機森林模型
 rf_model = RandomForestRegressor()
 
@@ -80,3 +98,18 @@ rf_model = RandomForestRegressor()
 mse_rf, r2_rf = train_and_evaluate_model(rf_model, X_train, y_train, X_test, y_test)
 print(f'隨機森林模型測試集均方誤差（MSE）：{mse_rf:.4f}')
 print(f'隨機森林模型測試集 R^2 分數：{r2_rf:.4f}')
+
+# 取得特徵重要性
+feature_importance = rf_model.feature_importances_
+
+# 創建一個 DataFrame 來顯示特徵名稱和對應的重要性
+feature_importance_df = pd.DataFrame({'Feature': X_train.columns, 'Importance': feature_importance})
+
+# 按重要性排序
+feature_importance_df = feature_importance_df.sort_values(by='Importance', ascending=False)
+
+# 視覺化特徵重要性
+plt.figure(figsize=(12, 6))
+sns.barplot(x='Importance', y='Feature', data=feature_importance_df)
+plt.title('Random Forest Model - Feature Importance')
+plt.show()
